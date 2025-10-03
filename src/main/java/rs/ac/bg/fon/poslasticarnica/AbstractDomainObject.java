@@ -7,9 +7,9 @@ import java.util.ArrayList;
 
 public abstract class AbstractDomainObject implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+	    private static final long serialVersionUID = 1L;
 	
-	 public abstract String nazivTabele();
+	    public abstract String nazivTabele();
 	    public abstract String alijas();
 	    public abstract String join();
 	    public abstract ArrayList<AbstractDomainObject> vratiListu(ResultSet rs) throws SQLException;

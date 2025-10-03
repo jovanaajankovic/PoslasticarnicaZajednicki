@@ -6,34 +6,38 @@ import java.util.ArrayList;
 
 public class StavkaRacuna extends AbstractDomainObject {
 	
-	  private static final long serialVersionUID = 7L;
+	    private static final long serialVersionUID = 7L;
 	
-	 private Racun racun;
+	    private Racun racun;
 	    private int rb;
 	    private int kolicina;
 	    private double cena;
 	    private Poslastica poslastica;
 
 	    public StavkaRacuna(Racun racun, int rb, int kolicina, double cena, Poslastica poslastica) {
-	        this.racun = racun;
-	        this.rb = rb;
-	        this.kolicina = kolicina;
-	        this.cena = cena;
-	        this.poslastica = poslastica;
+	    	 setRacun(racun);
+			 setRb(rb);
+			 setKolicina(kolicina);
+			 setCena(cena);
+			 setPoslastica(poslastica);
 	    }
+	    
 
 	    public StavkaRacuna() {
 	    }
+	    
 
 	    @Override
 	    public String nazivTabele() {
 	        return " StavkaRacuna ";
 	    }
+	    
 
 	    @Override
 	    public String alijas() {
 	        return " sr ";
 	    }
+	    
 
 	    @Override
 	    public String join() {
@@ -42,6 +46,7 @@ public class StavkaRacuna extends AbstractDomainObject {
 	                + "JOIN RACUN R ON (R.RACUNID = SR.RACUNID) "
 	                + "JOIN ADMINISTRATOR A ON (A.ADMINISTRATORID = R.ADMINISTRATORID) ";
 	    }
+	    
 
 	    @Override
 	    public ArrayList<AbstractDomainObject> vratiListu(ResultSet rs) throws SQLException {
@@ -70,70 +75,95 @@ public class StavkaRacuna extends AbstractDomainObject {
 	        rs.close();
 	        return lista;
 	    }
+	    
 
 	    @Override
 	    public String koloneZaInsert() {
 	        return " (racunID, rb, kolicina, cena, poslasticaID) ";
 	    }
+	    
 
 	    @Override
 	    public String uslov() {
 	        return " racunID = " + racun.getRacunID() + " AND RB = " + rb;
 	    }
+	    
 
 	    @Override
 	    public String vrednostiZaInsert() {
 	        return " " + racun.getRacunID() + ", " + rb + ", "
 	                + " " + kolicina + ", " + cena + ", " + poslastica.getPoslasticaID();
 	    }
+	    
 
 	    @Override
 	    public String vrednostiZaUpdate() {
 	        return "";
 	    }
+	    
 
 	    @Override
 	    public String uslovZaSelect() {
 	        return " WHERE R.RACUNID = " + racun.getRacunID();
 	    }
+	    
 
 	    public Racun getRacun() {
 	        return racun;
 	    }
 
 	    public void setRacun(Racun racun) {
+	    	if (racun == null) 
+		        throw new NullPointerException("Racun ne sme biti null.");
+	    	
 	        this.racun = racun;
 	    }
 
+	    
 	    public int getRb() {
 	        return rb;
 	    }
 
 	    public void setRb(int rb) {
+	    	if (rb <= 0)
+		        throw new IllegalArgumentException("Redni broj mora biti pozitivan broj.");
+	    	
 	        this.rb = rb;
 	    }
 
+	    
 	    public int getKolicina() {
 	        return kolicina;
 	    }
 
 	    public void setKolicina(int kolicina) {
+	    	if (kolicina <= 0)
+		        throw new IllegalArgumentException("Kolicina mora biti veca od nule.");
+	    	
 	        this.kolicina = kolicina;
 	    }
 
+	    
 	    public double getCena() {
 	        return cena;
 	    }
 
 	    public void setCena(double cena) {
+	    	if (cena <= 0)
+		        throw new IllegalArgumentException("Cena mora biti veca od nule.");
+	    	
 	        this.cena = cena;
 	    }
+	    
 
 	    public Poslastica getPoslastica() {
 	        return poslastica;
 	    }
 
 	    public void setPoslastica(Poslastica poslastica) {
+	    	if (poslastica == null) 
+		        throw new NullPointerException("Poslastica ne sme biti null.");
+	    	
 	        this.poslastica = poslastica;
 	    }
 

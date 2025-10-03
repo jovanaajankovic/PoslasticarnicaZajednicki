@@ -6,38 +6,45 @@ import java.util.ArrayList;
 
 public class TipPoslastice extends AbstractDomainObject{
 	
-	  private static final long serialVersionUID = 8L;
+	private static final long serialVersionUID = 8L;
 	
 	private Long tipPoslasticeID;
     private String naziv;
 
+    
     @Override
     public String toString() {
         return naziv;
     }
+    
 
     public TipPoslastice(Long tipPoslasticeID, String naziv) {
-        this.tipPoslasticeID = tipPoslasticeID;
-        this.naziv = naziv;
+    	setTipPoslasticeID(tipPoslasticeID);
+		setNaziv(naziv);
     }
 
+    
     public TipPoslastice() {
     }
+    
     
     @Override
     public String nazivTabele() {
         return " TipPoslastice ";
     }
+    
 
     @Override
     public String alijas() {
         return " tp ";
     }
+    
 
     @Override
     public String join() {
         return "";
     }
+    
 
     @Override
     public ArrayList<AbstractDomainObject> vratiListu(ResultSet rs) throws SQLException {
@@ -53,45 +60,64 @@ public class TipPoslastice extends AbstractDomainObject{
         rs.close();
         return lista;
     }
+    
 
     @Override
     public String koloneZaInsert() {
         return " (Naziv) ";
     }
+    
 
     @Override
     public String uslov() {
         return " TipPoslasticeID = " + tipPoslasticeID;
     }
+    
 
     @Override
     public String vrednostiZaInsert() {
         return " '" + naziv + "' ";
     }
+    
 
     @Override
     public String vrednostiZaUpdate() {
         return " Naziv = '" + naziv + "' ";
     }
+    
 
     @Override
     public String uslovZaSelect() {
         return "";
     }
+    
 
     public Long getTipPoslasticeID() {
         return tipPoslasticeID;
     }
 
     public void setTipPoslasticeID(Long tipPoslasticeID) {
+    	if (tipPoslasticeID == null)
+			throw new NullPointerException("ID ne sme biti null.");
+		
+    	if (tipPoslasticeID <= 0)
+	        throw new IllegalArgumentException("ID mora biti pozitivan broj.");
+    	
         this.tipPoslasticeID = tipPoslasticeID;
     }
+    
 
     public String getNaziv() {
         return naziv;
     }
 
     public void setNaziv(String naziv) {
+    	if (naziv == null)
+				throw new NullPointerException("Naziv ne sme biti null.");
+			
+		if (naziv.isEmpty())
+				throw new IllegalArgumentException("Naziv ne sme biti prazan.");
+		
         this.naziv = naziv;
     }
 
