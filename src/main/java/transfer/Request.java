@@ -7,6 +7,8 @@ import java.io.Serializable;
  * <p>
  * Svaki zahtev sadrzi operaciju koja se izvrsava i podatke potrebne za tu
  * operaciju. Implementira Serializable radi slanja preko mreze.
+ * 
+ * @author Jovana Jankovic
  */
 public class Request implements Serializable {
 
