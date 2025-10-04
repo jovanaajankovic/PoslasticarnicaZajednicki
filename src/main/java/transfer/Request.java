@@ -2,35 +2,75 @@ package transfer;
 
 import java.io.Serializable;
 
-public class Request implements Serializable{
-	
-    private static final long serialVersionUID = 1L;
-	
-	 private int operation;
-	    private Object data;
+/**
+ * Klasa koja predstavlja zahtev koji klijent salje serveru.
+ * <p>
+ * Svaki zahtev sadrzi operaciju koja se izvrsava i podatke potrebne za tu
+ * operaciju. Implementira Serializable radi slanja preko mreze.
+ */
+public class Request implements Serializable {
 
-	    public Request() {
-	    }
+	/** Jedinstveni identifikator verzije klase za potrebe serijalizacije. */
+	private static final long serialVersionUID = 1L;
 
-	    public Request(int operation, Object data) {
-	        this.operation = operation;
-	        this.data = data;
-	    }
+	/** Operacija koja se zahteva od servera kao int */
+	private int operation;
 
-	    public Object getData() {
-	        return data;
-	    }
+	/** Podaci koji se salju serveru (entitet ili dodatni parametri). */
+	private Object data;
 
-	    public int getOperation() {
-	        return operation;
-	    }
+	/**
+	 * Inicijalizuje objekat klase Request sa atributima koji imaju default
+	 * vrednosti.
+	 */
+	public Request() {
+	}
 
-	    public void setData(Object data) {
-	        this.data = data;
-	    }
+	/**
+	 * Inicijalizuje objekat klase Request sa svim parametrima.
+	 * 
+	 * @param operation Operacija koja se izvrsava
+	 * @param data      Podaci potrebni za operaciju
+	 */
+	public Request(int operation, Object data) {
+		this.operation = operation;
+		this.data = data;
+	}
 
-	    public void setOperation(int operation) {
-	        this.operation = operation;
-	    }
+	/**
+	 * Vraca podatke iz zahteva.
+	 * 
+	 * @return objekat sa podacima
+	 */
+	public Object getData() {
+		return data;
+	}
+
+	/**
+	 * Vraca broj operacije.
+	 * 
+	 * @return broj operacije
+	 */
+	public int getOperation() {
+		return operation;
+	}
+
+	/**
+	 * Postavlja podatke za zahtev.
+	 * 
+	 * @param data objekat sa podacima
+	 */
+	public void setData(Object data) {
+		this.data = data;
+	}
+
+	/**
+	 * Postavlja operaciju koja se zahteva.
+	 * 
+	 * @param operation broj operacije
+	 */
+	public void setOperation(int operation) {
+		this.operation = operation;
+	}
 
 }
