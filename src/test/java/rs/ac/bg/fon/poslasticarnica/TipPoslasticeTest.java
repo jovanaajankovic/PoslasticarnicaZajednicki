@@ -99,17 +99,19 @@ class TipPoslasticeTest {
 
 	@Test
 	void testUslov() {
-		TipPoslastice tip = new TipPoslastice(1L, "Torta");
-		assertEquals(" TipPoslasticeID = 1", tip.uslov());
+		tipPoslastice.setTipPoslasticeID(1L);
+		assertEquals(" TipPoslasticeID = 1", tipPoslastice.uslov());
 	}
 
 	@Test
 	void testVrednostiZaInsert() {
+		tipPoslastice.setNaziv("Torta");
 		assertEquals(" 'Torta' ", tipPoslastice.vrednostiZaInsert());
 	}
 
 	@Test
 	void testVrednostiZaUpdate() {
+		tipPoslastice.setNaziv("Torta");
 		assertEquals(" Naziv = 'Torta' ", tipPoslastice.vrednostiZaUpdate());
 	}
 
