@@ -14,7 +14,7 @@ class AdministratorTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		administrator = new Administrator();
+		administrator = new Administrator(1L, "Jovana", "Jankovic", "jovana123", "jovana123");
 	}
 
 	@AfterEach
@@ -29,8 +29,6 @@ class AdministratorTest {
 
 	@Test
 	void testAdministratorLongStringStringStringString() {
-		administrator = new Administrator(1L, "Jovana", "Jankovic", "jovana123", "jovana123");
-
 		assertNotNull(administrator);
 		assertEquals(1L, administrator.getAdministratorID());
 		assertEquals("Jovana", administrator.getIme());
@@ -41,7 +39,6 @@ class AdministratorTest {
 
 	@Test
 	void testSetAdministratorID() {
-		administrator.setAdministratorID(1L);
 		assertEquals(1L, administrator.getAdministratorID());
 	}
 
@@ -62,7 +59,6 @@ class AdministratorTest {
 
 	@Test
 	void testSetIme() {
-		administrator.setIme("Jovana");
 		assertEquals("Jovana", administrator.getIme());
 	}
 
@@ -89,7 +85,6 @@ class AdministratorTest {
 
 	@Test
 	void testSetPrezime() {
-		administrator.setPrezime("Jankovic");
 		assertEquals("Jankovic", administrator.getPrezime());
 	}
 
@@ -116,7 +111,6 @@ class AdministratorTest {
 
 	@Test
 	void testSetUsername() {
-		administrator.setUsername("jovana123");
 		assertEquals("jovana123", administrator.getUsername());
 	}
 
@@ -156,11 +150,6 @@ class AdministratorTest {
 
 	@Test
 	void testToString() {
-		administrator.setAdministratorID(1L);
-		administrator.setIme("Jovana");
-		administrator.setPrezime("Jankovic");
-		administrator.setUsername("jovana123");
-		administrator.setPassword("jovana123");
 
 		assertTrue(administrator.toString().contains("Jovana"));
 		assertTrue(administrator.toString().contains("Jankovic"));
