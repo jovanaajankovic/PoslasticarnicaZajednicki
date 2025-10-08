@@ -58,12 +58,12 @@ public class Poslastica extends AbstractDomainObject {
 	 */
 	public Poslastica(Long poslasticaID, String naziv, double cenaPoKomadu, String opis, TipPoslastice tipPoslastice,
 			ArrayList<Sastojak> sastojci) {
-		setPoslasticaID(poslasticaID);
-		setNaziv(naziv);
-		setCenaPoKomadu(cenaPoKomadu);
-		setOpis(opis);
-		setTipPoslastice(tipPoslastice);
-		setSastojci(sastojci);
+		this.poslasticaID=poslasticaID;
+		this.naziv=naziv;
+		this.cenaPoKomadu=cenaPoKomadu;
+		this.opis=opis;
+		this.tipPoslastice=tipPoslastice;
+		this.sastojci=sastojci;
 
 	}
 
@@ -133,7 +133,7 @@ public class Poslastica extends AbstractDomainObject {
 		ArrayList<AbstractDomainObject> lista = new ArrayList<>();
 
 		while (rs.next()) {
-			TipPoslastice tp = new TipPoslastice(rs.getLong("TipPoslasticeID"), rs.getString("tp.Naziv"));
+			TipPoslastice tp = new TipPoslastice(rs.getLong("TipPoslasticeID"), rs.getString("Naziv"));
 
 			Poslastica p = new Poslastica(rs.getLong("poslasticaID"), rs.getString("p.naziv"),
 					rs.getDouble("cenaPoKomadu"), rs.getString("opis"), tp, null);
