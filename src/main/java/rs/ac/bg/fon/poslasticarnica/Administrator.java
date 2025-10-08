@@ -152,20 +152,15 @@ public class Administrator extends AbstractDomainObject {
 	}
 
 	/**
-	 * Postavlja password administratora. Password ne sme biti null i mora imati
-	 * najmanje 8 karaktera.
+	 * Postavlja password administratora. Password ne sme biti null.
 	 * 
 	 * @param password Password administratora
 	 * @throws java.lang.NullPointerException     ako je password null
 	 * @throws java.lang.IllegalArgumentException ako je password kraci od 8
-	 *                                            karaktera
 	 */
 	public void setPassword(String password) {
 		if (password == null)
 			throw new NullPointerException("Password ne sme biti null.");
-
-		if (password.length() < 8)
-			throw new IllegalArgumentException("Password mora imati najmanje 8 karaktera.");
 
 		this.password = password;
 	}

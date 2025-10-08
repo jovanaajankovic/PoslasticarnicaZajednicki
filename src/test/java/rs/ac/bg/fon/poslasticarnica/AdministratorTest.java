@@ -126,27 +126,16 @@ class AdministratorTest {
 
 	@Test
 	void testSetPassword() {
-		administrator.setPassword("jovana123"); // vise od 8 karaktera
+		administrator.setPassword("jovana123"); 
 		assertEquals("jovana123", administrator.getPassword());
 	}
 
-	@Test
-	void testSetPassword8Karaktera() {
-		administrator.setPassword("jovana12"); // tacno 8 karaktera
-		assertEquals("jovana12", administrator.getPassword());
-	}
-
+	
 	@Test
 	void testSetPasswordNull() {
 		assertThrows(java.lang.NullPointerException.class, () -> administrator.setPassword(null));
 	}
 
-	@Test
-	void testSetPasswordKratka() {
-		assertThrows(java.lang.IllegalArgumentException.class, () -> administrator.setPassword("jovana1")); // manje od
-																											// 8
-																											// karaktera
-	}
 
 	@Test
 	void testToString() {
