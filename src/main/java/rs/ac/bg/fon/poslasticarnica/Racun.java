@@ -89,7 +89,8 @@ public class Racun extends AbstractDomainObject {
 			Administrator a = new Administrator(rs.getLong("AdministratorID"), rs.getString("Ime"),
 					rs.getString("Prezime"), rs.getString("Username"), rs.getString("Password"));
 
-			Racun r = new Racun(rs.getLong("racunID"), rs.getTimestamp("datumVreme"), rs.getDouble("cena"), a, null);
+			Racun r = new Racun(rs.getLong("racunID"), rs.getTimestamp("datumVreme"), rs.getDouble("cena"), a,
+					new ArrayList<StavkaRacuna>());
 
 			lista.add(r);
 		}
@@ -239,15 +240,9 @@ public class Racun extends AbstractDomainObject {
 	 * Postavlja listu stavki na racunu. Lista stavki ne sme biti null niti prazna.
 	 *
 	 * @param stavkeRacuna Lista stavki
-	 * @throws java.lang.NullPointerException     ako je lista null
-	 * @throws java.lang.IllegalArgumentException ako je lista prazna
+	 * 
 	 */
 	public void setStavkeRacuna(ArrayList<StavkaRacuna> stavkeRacuna) {
-		if (stavkeRacuna == null)
-			throw new NullPointerException("Lista stavki ne sme biti null.");
-
-		if (stavkeRacuna.isEmpty())
-			throw new IllegalArgumentException("Racun mora imati bar jednu stavku racuna.");
 
 		this.stavkeRacuna = stavkeRacuna;
 	}
