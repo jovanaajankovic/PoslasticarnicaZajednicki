@@ -139,7 +139,6 @@ class AdministratorTest {
 
 	@Test
 	void testToString() {
-
 		assertTrue(administrator.toString().contains("Jovana"));
 		assertTrue(administrator.toString().contains("Jankovic"));
 	}
