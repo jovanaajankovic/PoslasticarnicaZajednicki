@@ -40,13 +40,11 @@ class StavkaRacunaTest {
 
 	@Test
 	void testStavkaRacunaRacunIntIntDoublePoslastica() {
-		stavkaRacuna = new StavkaRacuna(racun, 1, 2, 250.0, poslastica);
-
 		assertNotNull(stavkaRacuna);
 		assertEquals(racun, stavkaRacuna.getRacun());
 		assertEquals(1, stavkaRacuna.getRb());
 		assertEquals(2, stavkaRacuna.getKolicina());
-		assertEquals(250.0, stavkaRacuna.getCena());
+		assertEquals(500.0, stavkaRacuna.getCena());
 		assertEquals(poslastica, stavkaRacuna.getPoslastica());
 	}
 
