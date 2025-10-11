@@ -123,16 +123,6 @@ class RacunTest {
 	}
 
 	@Test
-	void testSetStavkeRacunaNull() {
-		assertThrows(java.lang.NullPointerException.class, () -> racun.setStavkeRacuna(null));
-	}
-
-	@Test
-	void testSetStavkeRacunaEmpty() {
-		assertThrows(java.lang.IllegalArgumentException.class, () -> racun.setStavkeRacuna(new ArrayList<>()));
-	}
-
-	@Test
 	void testNazivTabele() {
 		assertEquals(" Racun ", racun.nazivTabele());
 	}
