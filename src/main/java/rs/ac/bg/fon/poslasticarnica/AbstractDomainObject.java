@@ -10,13 +10,12 @@ import java.util.ArrayList;
  * apstraktne metode koje svaki konkretan domenski objekat mora da implementira.
  * 
  * @author Jovana Jankovic
- *
  */
 public abstract class AbstractDomainObject implements Serializable {
 
 	/**
 	 * Jedinstveni identifikator verzije klase za potrebe serijalizacije i
-	 * deserializacije objekata.
+	 * deserijalizacije objekata.
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -47,7 +46,7 @@ public abstract class AbstractDomainObject implements Serializable {
 	 * 
 	 * @param rs ResultSet koji sadrzi podatke iz baze
 	 * @return lista objekata domenske klase
-	 * @throws SQLException ako dodje do greske prilikom citanja iz ResultSet-a
+	 * @throws java.sql.SQLException ako dodje do greske prilikom citanja iz ResultSet-a
 	 */
 	public abstract ArrayList<AbstractDomainObject> vratiListu(ResultSet rs) throws SQLException;
 
