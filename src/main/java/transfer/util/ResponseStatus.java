@@ -11,9 +11,9 @@ package transfer.util;
 public enum ResponseStatus {
 
 	/** Oznaka da je operacija uspesno izvrsena. */
-	Success,
+	SUCCESS,
 
 	/** Oznaka da je doslo do greske pri izvrsavanju operacije. */
-	Error
+	ERROR
 
 }

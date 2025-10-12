@@ -7,9 +7,9 @@ import transfer.util.ResponseStatus;
 /**
  * Klasa koja predstavlja odgovor servera na zahtev klijenta.
  * <p>
- * Odgovor moze sadrzati podatke, izuzetak (ako je doslo do greske) i status
- * odgovora (uspeh ili greska). Implementira Serializable radi slanja preko
- * mreze.
+ * Odgovor moze sadrzati podatke, poruku o gresci (ako je doslo do greske) i
+ * status odgovora (uspeh ili greska). Implementira Serializable radi slanja
+ * preko mreze.
  * 
  * @author Jovana Jankovic
  */
@@ -21,8 +21,8 @@ public class Response implements Serializable {
 	/** Podaci koje server vraca klijentu. */
 	private Object data;
 
-	/** Izuzetak koji se desio prilikom izvrsavanja operacije (ako postoji). */
-	private Exception exc;
+	/** Poruka o gresci ako je do nje doslo/ */
+	private String errorMessage;
 
 	/** Status odgovora (uspesan ili neuspesan). */
 	private ResponseStatus responseStatus;
@@ -38,12 +38,12 @@ public class Response implements Serializable {
 	 * Inicijalizuje objekat klase Response sa svim parametrima.
 	 * 
 	 * @param data           Podaci koje server vraca klijentu
-	 * @param exc            Izuzetak ako je doslo do greske
+	 * @param errorMessagr   Poruka o gresci ako je do nje doslo
 	 * @param responseStatus Status odgovora (SUCCESS / ERROR)
 	 */
-	public Response(Object data, Exception exc, ResponseStatus responseStatus) {
+	public Response(Object data, String errorMessage, ResponseStatus responseStatus) {
 		this.data = data;
-		this.exc = exc;
+		this.errorMessage = errorMessage;
 		this.responseStatus = responseStatus;
 	}
 
@@ -66,21 +66,21 @@ public class Response implements Serializable {
 	}
 
 	/**
-	 * Vraca izuzetak ako je doslo do greske.
+	 * Vraca poruku o gresci ako do nje doslo.
 	 * 
-	 * @return Exception ili null ako nema greske
+	 * @return poruka o gresci
 	 */
-	public Exception getException() {
-		return exc;
+	public String getErrorMessage() {
+		return errorMessage;
 	}
 
 	/**
-	 * Postavlja izuzetak koji se dogodio.
+	 * Postavlja poruku o gresci.
 	 * 
-	 * @param exc Instanca izuzetka
+	 * @param errorMessage Poruka o gresci
 	 */
-	public void setException(Exception exc) {
-		this.exc = exc;
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 
 	/**
