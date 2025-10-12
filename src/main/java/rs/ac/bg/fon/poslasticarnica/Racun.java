@@ -44,12 +44,12 @@ public class Racun extends AbstractDomainObject {
 	/**
 	 * Inicijalizuje objekat klase Racun sa svim parametrima.
 	 *
-	 * @param racunID       ID racuna.Mora biti pozitivan i ne sme biti null.
+	 * @param racunID       ID racuna
 	 * @param datumVreme    Datum i vreme izdavanja. Ne sme biti null niti posle
 	 *                      trenutnog datuma.
 	 * @param cena          Ukupna cena racuna. Mora biti veca od nule.
 	 * @param administrator Administrator koji izdaje racun. Ne sme biti null.
-	 * @param stavkeRacuna  Lista stavki racuna. Ne sme biti null niti prazna.
+	 * @param stavkeRacuna  Lista stavki racuna
 	 */
 	public Racun(Long racunID, Date datumVreme, double cena, Administrator administrator,
 			ArrayList<StavkaRacuna> stavkeRacuna) {
@@ -138,20 +138,11 @@ public class Racun extends AbstractDomainObject {
 	}
 
 	/**
-	 * Postavlja ID racuna. ID racuna mora biti pozitivan broj i ne sme biti null.
+	 * Postavlja ID racuna.
 	 *
 	 * @param racunID ID racuna
-	 * @throws java.lang.NullPointerException     ako je ID null
-	 * @throws java.lang.IllegalArgumentException ako ID nije pozitivan broj veci od
-	 *                                            nule
 	 */
 	public void setRacunID(Long racunID) {
-		if (racunID == null)
-			throw new NullPointerException("ID ne sme biti null.");
-
-		if (racunID <= 0)
-			throw new IllegalArgumentException("ID mora biti pozitivan broj.");
-
 		this.racunID = racunID;
 	}
 
@@ -237,13 +228,12 @@ public class Racun extends AbstractDomainObject {
 	}
 
 	/**
-	 * Postavlja listu stavki na racunu. Lista stavki ne sme biti null niti prazna.
+	 * Postavlja listu stavki na racunu.
 	 *
 	 * @param stavkeRacuna Lista stavki
 	 * 
 	 */
 	public void setStavkeRacuna(ArrayList<StavkaRacuna> stavkeRacuna) {
-
 		this.stavkeRacuna = stavkeRacuna;
 	}
 

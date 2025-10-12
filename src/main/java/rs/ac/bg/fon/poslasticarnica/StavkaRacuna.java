@@ -36,8 +36,8 @@ public class StavkaRacuna extends AbstractDomainObject {
 	/**
 	 * Inicijalizuje objekat klase StavkaRacuna sa svim parametrima.
 	 *
-	 * @param racun      Racun kojem stavka pripada. Ne sme biti null.
-	 * @param rb         Redni broj stavke. Mora biti pozitivan broj.
+	 * @param racun      Racun kojem stavka pripada.
+	 * @param rb         Redni broj stavke.
 	 * @param kolicina   Kolicina poslastica. Mora biti veca od nule.
 	 * @param cena       Cena stavke. Mora biti veca od nule.
 	 * @param poslastica Poslastica koja se nalazi u stavci. Ne sme biti null.
@@ -135,15 +135,11 @@ public class StavkaRacuna extends AbstractDomainObject {
 	}
 
 	/**
-	 * Postavlja racun kome stavka pripada. Racun ne sme biti null.
+	 * Postavlja racun kome stavka pripada.
 	 *
 	 * @param racun Racun kome stavka pripada
-	 * @throws java.lang.NullPointerException ako je racun null
 	 */
 	public void setRacun(Racun racun) {
-		if (racun == null)
-			throw new NullPointerException("Racun ne sme biti null.");
-
 		this.racun = racun;
 	}
 
@@ -157,15 +153,11 @@ public class StavkaRacuna extends AbstractDomainObject {
 	}
 
 	/**
-	 * Postavlja redni broj stavke. Redni broj mora biti pozitivan.
+	 * Postavlja redni broj stavke.
 	 *
 	 * @param rb Redni broj stavke
-	 * @throws java.lang.IllegalArgumentException ako redni broj nije pozitivan
 	 */
 	public void setRb(int rb) {
-		if (rb <= 0)
-			throw new IllegalArgumentException("Redni broj mora biti pozitivan broj.");
-
 		this.rb = rb;
 	}
 

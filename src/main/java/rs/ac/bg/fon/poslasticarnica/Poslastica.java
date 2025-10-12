@@ -58,12 +58,12 @@ public class Poslastica extends AbstractDomainObject {
 	 */
 	public Poslastica(Long poslasticaID, String naziv, double cenaPoKomadu, String opis, TipPoslastice tipPoslastice,
 			ArrayList<Sastojak> sastojci) {
-		this.poslasticaID=poslasticaID;
-		this.naziv=naziv;
-		this.cenaPoKomadu=cenaPoKomadu;
-		this.opis=opis;
-		this.tipPoslastice=tipPoslastice;
-		this.sastojci=sastojci;
+		this.poslasticaID = poslasticaID;
+		this.naziv = naziv;
+		this.cenaPoKomadu = cenaPoKomadu;
+		this.opis = opis;
+		this.tipPoslastice = tipPoslastice;
+		this.sastojci = sastojci;
 
 	}
 
@@ -306,18 +306,14 @@ public class Poslastica extends AbstractDomainObject {
 	}
 
 	/**
-	 * Postavlja listu sastojaka. Lista sastojaka ne sme biti null niti prazna.
+	 * Postavlja listu sastojaka. Lista sastojaka ne sme biti null.
 	 * 
 	 * @param sastojci Lista sastojaka
-	 * @throws java.lang.NullPointerException     ako je lista null
-	 * @throws java.lang.IllegalArgumentException ako je lista prazna
+	 * @throws java.lang.NullPointerException ako je lista null
 	 */
 	public void setSastojci(ArrayList<Sastojak> sastojci) {
 		if (sastojci == null)
 			throw new NullPointerException("Lista sastojaka ne sme biti null.");
-
-		if (sastojci.isEmpty())
-			throw new IllegalArgumentException("Poslastica mora imati bar jedan sastojak.");
 
 		this.sastojci = sastojci;
 	}
@@ -354,7 +350,7 @@ public class Poslastica extends AbstractDomainObject {
 	}
 
 	/**
-	 * Postavlja listu ocena. Lista ocena ne sme biti null niti prazna.
+	 * Postavlja listu ocena. Lista ocena ne sme biti null.
 	 * 
 	 * @param ocene Lista ocena
 	 * @throws java.lang.NullPointerException ako je lista null

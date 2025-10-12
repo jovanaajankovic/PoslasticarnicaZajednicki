@@ -38,11 +38,25 @@ public class Sastojak extends AbstractDomainObject {
 	 * Inicijalizuje objekat klase Sastojak sa svim parametrima.
 	 *
 	 * @param poslastica Poslastica kojoj sastojak pripada. Ne sme biti null.
-	 * @param rb         Redni broj sastojka. Mora biti veci od nule.
+	 * @param rb         Redni broj sastojka
 	 * @param naziv      Naziv sastojka. Ne sme biti null niti prazan string.
 	 */
 	public Sastojak(Poslastica poslastica, int rb, String naziv) {
 		setPoslastica(poslastica);
+		setRb(rb);
+		setNaziv(naziv);
+	}
+
+	/**
+	 * Inicijalizuje objekat klase Sastojak za privremenu upotrebu na klijentu
+	 * (koristi se pre nego sto je Poslastica objekat kreiran).
+	 * 
+	 * @param rb    Redni broj sastojka (privremena vrednost)
+	 * @param naziv Naziv sastojka
+	 */
+	public Sastojak(int rb, String naziv) {
+		// omogucava da se doda sastojak u poslasticu pa onda da se cela poslastica
+		// ubaci u bazu
 		setRb(rb);
 		setNaziv(naziv);
 	}
@@ -149,13 +163,8 @@ public class Sastojak extends AbstractDomainObject {
 	 * Postavlja redni broj sastojka. Redni broj mora biti veci od nule.
 	 *
 	 * @param rb Redni broj
-	 * @throws java.lang.IllegalArgumentException ako je redni broj negativan ili
-	 *                                            jednak nuli
 	 */
 	public void setRb(int rb) {
-		if (rb <= 0)
-			throw new IllegalArgumentException("Redni broj mora biti pozitivan broj.");
-
 		this.rb = rb;
 	}
 
