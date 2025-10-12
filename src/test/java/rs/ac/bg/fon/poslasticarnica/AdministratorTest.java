@@ -1,16 +1,30 @@
 package rs.ac.bg.fon.poslasticarnica;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 class AdministratorTest {
 
 	private Administrator administrator;
+
+	@Mock
+	private ResultSet rs; // simulirani objekat za ResultSet iz metode vratiListu
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -126,16 +140,14 @@ class AdministratorTest {
 
 	@Test
 	void testSetPassword() {
-		administrator.setPassword("jovana123"); 
+		administrator.setPassword("jovana123");
 		assertEquals("jovana123", administrator.getPassword());
 	}
 
-	
 	@Test
 	void testSetPasswordNull() {
 		assertThrows(java.lang.NullPointerException.class, () -> administrator.setPassword(null));
 	}
-
 
 	@Test
 	void testToString() {
@@ -196,4 +208,37 @@ class AdministratorTest {
 		assertEquals("", administrator.uslovZaSelect());
 	}
 
+	@Test
+	void testVratiListu() throws SQLException {
+		// postavimo vrednosti za test
+		Long testID = 123L;
+		String testIme = "TestIme";
+		String testPrezime = "TestPrezime";
+		String testUser = "TestUser";
+		String testPass = "TestPass";
+
+		when(rs.next()).thenReturn(true).thenReturn(false); // simulacija da je samo prvi vracen podatak dobar i da se
+															// tu zaustavlja next
+
+		when(rs.getLong("AdministratorID")).thenReturn(testID); // kada se pozove getLong, vraca testID
+		when(rs.getString("Ime")).thenReturn(testIme); // kada se pozove getString, vraca testIme itd.
+		when(rs.getString("Prezime")).thenReturn(testPrezime);
+		when(rs.getString("Username")).thenReturn(testUser);
+		when(rs.getString("Password")).thenReturn(testPass);
+		// mora da se mockuje svaku kolonu iz tabele Administrator
+
+		ArrayList<AbstractDomainObject> lista = administrator.vratiListu(rs);
+
+		assertNotNull(lista);
+		assertEquals(1, lista.size()); // jer proveravamo za tacno 1 dobar zapis
+
+		Administrator a = (Administrator) lista.get(0);
+		assertEquals(testID, a.getAdministratorID());
+		assertEquals(testIme, a.getIme());
+		assertEquals(testPrezime, a.getPrezime());
+		assertEquals(testUser, a.getUsername());
+		assertEquals(testPass, a.getPassword());
+
+		verify(rs, times(1)).close(); // provera da je pozvan rs.close() iz metode vratiListu
+	}
 }

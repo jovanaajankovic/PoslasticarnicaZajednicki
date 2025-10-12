@@ -1,14 +1,28 @@
 package rs.ac.bg.fon.poslasticarnica;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 class TipPoslasticeTest {
 
 	private TipPoslastice tipPoslastice;
+
+	@Mock
+	private ResultSet rs; // simulirani objekat za ResultSet iz metode vratiListu
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -119,4 +133,29 @@ class TipPoslasticeTest {
 	void testUslovZaSelect() {
 		assertEquals("", tipPoslastice.uslovZaSelect());
 	}
+
+	@Test
+	void testVratiListu() throws SQLException {
+		// postavimo vrednosti za testni tip poslastice
+		Long testID = 10L;
+		String testNaziv = "Torta";
+
+		when(rs.next()).thenReturn(true).thenReturn(false); // simulacija da je samo prvi vracen podatak dobar i da se
+		// tu zaustavlja next
+
+		when(rs.getLong("TipPoslasticeID")).thenReturn(testID);
+		when(rs.getString("Naziv")).thenReturn(testNaziv);
+
+		ArrayList<AbstractDomainObject> lista = tipPoslastice.vratiListu(rs);
+
+		assertNotNull(lista);
+		assertEquals(1, lista.size());
+
+		TipPoslastice tp = (TipPoslastice) lista.get(0);
+		assertEquals(testID, tp.getTipPoslasticeID());
+		assertEquals(testNaziv, tp.getNaziv());
+
+		verify(rs, times(1)).close(); // provera da je pozvan rs.close() iz metode vratiListu
+	}
+
 }

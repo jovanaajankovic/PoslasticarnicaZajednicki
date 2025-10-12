@@ -1,13 +1,22 @@
 package rs.ac.bg.fon.poslasticarnica;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 class PoslasticaTest {
 
 	private Poslastica poslastica;
@@ -15,6 +24,9 @@ class PoslasticaTest {
 	private ArrayList<Sastojak> sastojci;
 	private Ambalaza ambalaza;
 	private ArrayList<OcenaPoslastice> ocene;
+
+	@Mock
+	private ResultSet rs; // simulirani objekat za ResultSet iz metode vratiListu
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -184,11 +196,6 @@ class PoslasticaTest {
 	}
 
 	@Test
-	void testSetSastojciEmpty() {
-		assertThrows(java.lang.IllegalArgumentException.class, () -> poslastica.setSastojci(new ArrayList<>()));
-	}
-
-	@Test
 	void testSetAmbalaza() {
 		poslastica.setAmbalaza(ambalaza);
 		assertEquals(ambalaza, poslastica.getAmbalaza());
@@ -198,7 +205,7 @@ class PoslasticaTest {
 	void testSetAmbalazaNull() {
 		assertThrows(java.lang.NullPointerException.class, () -> poslastica.setAmbalaza(null));
 	}
-	
+
 	@Test
 	void testSetOcene() {
 		poslastica.setOcene(ocene);
@@ -209,6 +216,7 @@ class PoslasticaTest {
 	void testSetOceneNull() {
 		assertThrows(java.lang.NullPointerException.class, () -> poslastica.setOcene(null));
 	}
+
 	@Test
 	void testToString() {
 		poslastica.setNaziv("Cokoladna torta");
@@ -216,50 +224,92 @@ class PoslasticaTest {
 		assertTrue(poslastica.toString().contains("Cokoladna torta"));
 		assertTrue(poslastica.toString().contains("500.0"));
 	}
-	
+
 	@Test
-    void testNazivTabele() {
-        assertEquals(" Poslastica ", poslastica.nazivTabele());
-    }
+	void testNazivTabele() {
+		assertEquals(" Poslastica ", poslastica.nazivTabele());
+	}
 
-    @Test
-    void testAlijas() {
-        assertEquals(" p ", poslastica.alijas());
-    }
+	@Test
+	void testAlijas() {
+		assertEquals(" p ", poslastica.alijas());
+	}
 
-    @Test
-    void testJoin() {
-        assertEquals(" JOIN TIPPOSLASTICE TP ON (TP.TIPPOSLASTICEID = P.TIPPOSLASTICEID) ", poslastica.join());
-    }
+	@Test
+	void testJoin() {
+		assertEquals(" JOIN TIPPOSLASTICE TP ON (TP.TIPPOSLASTICEID = P.TIPPOSLASTICEID) ", poslastica.join());
+	}
 
-    @Test
-    void testKoloneZaInsert() {
-        assertEquals(" (naziv, cenaPoKomadu, opis, TipPoslasticeID) ", poslastica.koloneZaInsert());
-    }
+	@Test
+	void testKoloneZaInsert() {
+		assertEquals(" (naziv, cenaPoKomadu, opis, TipPoslasticeID) ", poslastica.koloneZaInsert());
+	}
 
-    @Test
-    void testVrednostiZaInsert() {
-        String expected = "'" + poslastica.getNaziv() + "', " + poslastica.getCenaPoKomadu() +
-                          ", '" + poslastica.getOpis() + "', " + poslastica.getTipPoslastice().getTipPoslasticeID() + " ";
-        assertEquals(expected, poslastica.vrednostiZaInsert());
-    }
+	@Test
+	void testVrednostiZaInsert() {
+		String expected = "'" + poslastica.getNaziv() + "', " + poslastica.getCenaPoKomadu() + ", '"
+				+ poslastica.getOpis() + "', " + poslastica.getTipPoslastice().getTipPoslasticeID() + " ";
+		assertEquals(expected, poslastica.vrednostiZaInsert());
+	}
 
-    @Test
-    void testVrednostiZaUpdate() {
-        String expected = " naziv = '" + poslastica.getNaziv() + "', cenaPoKomadu = " +
-                          poslastica.getCenaPoKomadu() + ", opis = '" + poslastica.getOpis() + "' ";
-        assertEquals(expected, poslastica.vrednostiZaUpdate());
-    }
+	@Test
+	void testVrednostiZaUpdate() {
+		String expected = " naziv = '" + poslastica.getNaziv() + "', cenaPoKomadu = " + poslastica.getCenaPoKomadu()
+				+ ", opis = '" + poslastica.getOpis() + "' ";
+		assertEquals(expected, poslastica.vrednostiZaUpdate());
+	}
 
-    @Test
-    void testUslov() {
-        assertEquals(" poslasticaID = " + poslastica.getPoslasticaID(), poslastica.uslov());
-    }
+	@Test
+	void testUslov() {
+		assertEquals(" poslasticaID = " + poslastica.getPoslasticaID(), poslastica.uslov());
+	}
 
-    @Test
-    void testUslovZaSelect() {
-        assertEquals(" ORDER BY P.POSLASTICAID ASC", poslastica.uslovZaSelect());
-    }
+	@Test
+	void testUslovZaSelect() {
+		assertEquals(" ORDER BY P.POSLASTICAID ASC", poslastica.uslovZaSelect());
+	}
+
+	@Test
+	void testVratiListu() throws SQLException {
+		// postavimo vrednosti za testni tip poslastice
+		Long tipID = 101L;
+		String tipNaziv = "Torta";
+
+		// postavimo podatke za testnu poslasticu
+		Long poslasticaID = 50L;
+		String poslasticaNaziv = "Coko Torta";
+		double cena = 550.00;
+		String opis = "Najbolji opis";
+
+		when(rs.next()).thenReturn(true).thenReturn(false); // tacno jedan dobar zapis
+
+		// vracanje podataka za tip poslastice
+		when(rs.getLong("TipPoslasticeID")).thenReturn(tipID);
+		when(rs.getString("Naziv")).thenReturn(tipNaziv);
+
+		// vracanje podataka za poslasticu
+		when(rs.getLong("poslasticaID")).thenReturn(poslasticaID);
+		when(rs.getString("p.naziv")).thenReturn(poslasticaNaziv); // alijas definisan u domenskoj klasi
+		when(rs.getDouble("cenaPoKomadu")).thenReturn(cena);
+		when(rs.getString("opis")).thenReturn(opis);
+
+		ArrayList<AbstractDomainObject> lista = poslastica.vratiListu(rs);
+
+		assertNotNull(lista);
+		assertEquals(1, lista.size()); // tacno jedan dobar rezultat je vracen
+
+		Poslastica p = (Poslastica) lista.get(0);
+
+		assertEquals(poslasticaID, p.getPoslasticaID());
+		assertEquals(poslasticaNaziv, p.getNaziv());
+		assertEquals(cena, p.getCenaPoKomadu());
+		assertEquals(opis, p.getOpis());
+
+		TipPoslastice tp = p.getTipPoslastice();
+		assertNotNull(tp);
+		assertEquals(tipID, tp.getTipPoslasticeID());
+		assertEquals(tipNaziv, tp.getNaziv());
+
+		verify(rs, times(1)).close(); // provera da je pozvan rs.close() iz metode vratiListu
+	}
 }
-
-

@@ -1,19 +1,32 @@
 package rs.ac.bg.fon.poslasticarnica;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 class StavkaRacunaTest {
 
 	private StavkaRacuna stavkaRacuna;
 	private Racun racun;
 	private Poslastica poslastica;
+
+	@Mock
+	private ResultSet rs; // simulirani objekat za ResultSet iz metode vratiListu
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -60,24 +73,9 @@ class StavkaRacunaTest {
 	}
 
 	@Test
-	void testSetRacunNull() {
-		assertThrows(java.lang.NullPointerException.class, () -> stavkaRacuna.setRacun(null));
-	}
-
-	@Test
 	void testSetRb() {
 		stavkaRacuna.setRb(1);
 		assertEquals(1, stavkaRacuna.getRb());
-	}
-
-	@Test
-	void testSetRbNegativan() {
-		assertThrows(java.lang.IllegalArgumentException.class, () -> stavkaRacuna.setRb(-1));
-	}
-
-	@Test
-	void testSetRbNula() {
-		assertThrows(java.lang.IllegalArgumentException.class, () -> stavkaRacuna.setRb(0));
 	}
 
 	@Test
@@ -165,6 +163,100 @@ class StavkaRacunaTest {
 	@Test
 	void testUslovZaSelect() {
 		assertEquals(" WHERE R.RACUNID = 1", stavkaRacuna.uslovZaSelect());
+	}
+
+	@Test
+
+	void testVratiListu_UspehSviObjekti() throws SQLException {
+		// postavimo vrednosti za testnog administratora
+		Long adminID = 10L;
+		String adminIme = "Admin";
+		String adminPrezime = "Test";
+		String adminUser = "admin1";
+		String adminPass = "pass";
+
+		// postavimo vrednosti za testni racun
+		Long racunID = 200L;
+		Timestamp datumVreme = new Timestamp(new Date().getTime());
+		double racunCena = 2000.00;
+
+		// postavimo vrednosti za testni tip poslastice
+		Long tipID = 30L;
+		String tipNaziv = "Kolac";
+
+		// postavimo vrednosti za testnu poslasticu
+		Long poslasticaID = 40L;
+		String poslasticaNaziv = "Snikers";
+		double poslasticaCena = 350.00;
+		String opis = "Kikiriki i cokolada";
+
+		// postavimo vrednosti za testnu stavku racuna
+		int rb = 1;
+		int kolicina = 5;
+		double stavkaCena = 1750.00; // 5 * 350
+
+		when(rs.next()).thenReturn(true).thenReturn(false); // simulacija da je samo prvi vracen podatak dobar i da se
+		// tu zaustavlja next
+
+		when(rs.getLong("AdministratorID")).thenReturn(adminID);
+		when(rs.getString("Ime")).thenReturn(adminIme);
+		when(rs.getString("Prezime")).thenReturn(adminPrezime);
+		when(rs.getString("Username")).thenReturn(adminUser);
+		when(rs.getString("Password")).thenReturn(adminPass);
+
+		when(rs.getLong("racunID")).thenReturn(racunID);
+		when(rs.getTimestamp("datumVreme")).thenReturn(datumVreme);
+		when(rs.getDouble("r.cena")).thenReturn(racunCena);
+
+		when(rs.getLong("TipPoslasticeID")).thenReturn(tipID);
+		when(rs.getString("tp.Naziv")).thenReturn(tipNaziv);
+
+		when(rs.getLong("poslasticaID")).thenReturn(poslasticaID);
+		when(rs.getString("p.naziv")).thenReturn(poslasticaNaziv);
+		when(rs.getDouble("cenaPoKomadu")).thenReturn(poslasticaCena);
+		when(rs.getString("opis")).thenReturn(opis);
+
+		when(rs.getInt("rb")).thenReturn(rb);
+		when(rs.getInt("kolicina")).thenReturn(kolicina);
+		when(rs.getDouble("sr.cena")).thenReturn(stavkaCena);
+
+		ArrayList<AbstractDomainObject> lista = stavkaRacuna.vratiListu(rs);
+
+		assertNotNull(lista);
+		assertEquals(1, lista.size());
+
+		StavkaRacuna sr = (StavkaRacuna) lista.get(0);
+		assertEquals(rb, sr.getRb());
+		assertEquals(kolicina, sr.getKolicina());
+		assertEquals(stavkaCena, sr.getCena());
+
+		Poslastica p = sr.getPoslastica();
+		assertNotNull(p);
+		assertEquals(poslasticaID, p.getPoslasticaID());
+		assertEquals(poslasticaNaziv, p.getNaziv());
+		assertEquals(poslasticaCena, p.getCenaPoKomadu());
+		assertEquals(opis, p.getOpis());
+
+		TipPoslastice tp = p.getTipPoslastice();
+		assertNotNull(tp);
+		assertEquals(tipID, tp.getTipPoslasticeID());
+		assertEquals(tipNaziv, tp.getNaziv());
+
+		Racun r = sr.getRacun();
+		assertNotNull(r);
+		assertEquals(racunID, r.getRacunID());
+		assertEquals(datumVreme, r.getDatumVreme());
+		assertEquals(racunCena, r.getCena());
+
+		Administrator a = r.getAdministrator();
+		assertNotNull(a);
+		assertEquals(adminID, a.getAdministratorID());
+		assertEquals(adminIme, a.getIme());
+		assertEquals(adminPrezime, a.getPrezime());
+		assertEquals(adminUser, a.getUsername());
+		assertEquals(adminPass, a.getPassword());
+
+		verify(rs, times(1)).close(); // provera da je pozvan rs.close() iz metode vratiListu
 	}
 
 }

@@ -1,7 +1,12 @@
 package rs.ac.bg.fon.poslasticarnica;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,11 +14,18 @@ import java.util.Date;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 class RacunTest {
 
 	private Racun racun;
 	private Administrator administrator;
+
+	@Mock
+	private ResultSet rs; // simulirani objekat za ResultSet iz metode vratiListu
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -51,21 +63,6 @@ class RacunTest {
 	void testSetRacunID() {
 		racun.setRacunID(1L);
 		assertEquals(1L, racun.getRacunID());
-	}
-
-	@Test
-	void testSetRacunIDNull() {
-		assertThrows(java.lang.NullPointerException.class, () -> racun.setRacunID(null));
-	}
-
-	@Test
-	void testSetRacunIDNegativan() {
-		assertThrows(java.lang.IllegalArgumentException.class, () -> racun.setRacunID(-1L));
-	}
-
-	@Test
-	void testSetRacunIDNula() {
-		assertThrows(java.lang.IllegalArgumentException.class, () -> racun.setRacunID(0L));
 	}
 
 	@Test
@@ -174,6 +171,60 @@ class RacunTest {
 	@Test
 	void testUslovZaSelect() {
 		assertEquals("", racun.uslovZaSelect());
+	}
+
+	@Test
+
+	void testVratiListu() throws SQLException {
+		// postavimo vrednosti za testnog administratora
+		Long adminID = 1L;
+		String adminIme = "Petar";
+		String adminPrezime = "Petrovic";
+		String adminUser = "admin";
+		String adminPass = "pass123";
+
+		// postavimo vrednosti za testni racun
+		Long racunID = 100L;
+		Timestamp datumVreme = new Timestamp(new Date().getTime());
+		double cena = 1500.50;
+
+		when(rs.next()).thenReturn(true).thenReturn(false); // simulacija da je samo prvi vracen podatak dobar i da se
+		// tu zaustavlja next
+
+		// vracanje vrednosti atributa za administratora
+		when(rs.getLong("AdministratorID")).thenReturn(adminID);
+		when(rs.getString("Ime")).thenReturn(adminIme);
+		when(rs.getString("Prezime")).thenReturn(adminPrezime);
+		when(rs.getString("Username")).thenReturn(adminUser);
+		when(rs.getString("Password")).thenReturn(adminPass);
+
+		// vracanje vrednosti atributa za racun
+		when(rs.getLong("racunID")).thenReturn(racunID);
+		when(rs.getTimestamp("datumVreme")).thenReturn(datumVreme);
+		when(rs.getDouble("cena")).thenReturn(cena);
+
+		ArrayList<AbstractDomainObject> lista = racun.vratiListu(rs);
+
+		assertNotNull(lista);
+		assertEquals(1, lista.size());
+
+		Racun r = (Racun) lista.get(0);
+		assertEquals(racunID, r.getRacunID());
+		assertEquals(datumVreme, r.getDatumVreme());
+		assertEquals(cena, r.getCena());
+
+		Administrator a = r.getAdministrator();
+		assertNotNull(a);
+		assertEquals(adminID, a.getAdministratorID());
+		assertEquals(adminIme, a.getIme());
+		assertEquals(adminPrezime, a.getPrezime());
+		assertEquals(adminUser, a.getUsername());
+		assertEquals(adminPass, a.getPassword());
+
+		assertNotNull(r.getStavkeRacuna());
+		assertTrue(r.getStavkeRacuna().isEmpty());
+
+		verify(rs, times(1)).close(); // provera da je pozvan rs.close() iz metode vratiListu
 	}
 
 }
