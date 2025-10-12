@@ -38,7 +38,7 @@ public class Response implements Serializable {
 	 * Inicijalizuje objekat klase Response sa svim parametrima.
 	 * 
 	 * @param data           Podaci koje server vraca klijentu
-	 * @param errorMessag   Poruka o gresci ako je do nje doslo
+	 * @param errorMessage   Poruka o gresci ako je do nje doslo
 	 * @param responseStatus Status odgovora (SUCCESS / ERROR)
 	 */
 	public Response(Object data, String errorMessage, ResponseStatus responseStatus) {
